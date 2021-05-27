@@ -1,5 +1,6 @@
 package com.natwest.service;
 
+import com.natwest.model.PrimeResponse;
 import com.natwest.validator.PrimeValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,11 +19,15 @@ public class PrimeNumberService {
 
     Logger logger = LoggerFactory.getLogger(PrimeNumberService.class);
 
-    public List<Integer> getPrimeNumbersInRange(Integer end) {
-        primeValidator.validate(end);
-        return IntStream.rangeClosed(2, end)
+    public PrimeResponse getPrimeNumbersInRange(Integer initial) {
+        primeValidator.validate(initial);
+
+        List<Integer> primes =  IntStream.rangeClosed(2, initial)
                 .filter(number -> isPrime(number)).boxed()
                 .collect(Collectors.toList());
+        return PrimeResponse.builder()
+                .primes(primes)
+                .initial(initial).build();
     }
 
     private boolean isPrime(int number) {
